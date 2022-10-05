@@ -1,0 +1,19 @@
+{
+  "name": "@rami-sabbagh/ts-inject-parameters-metadata",
+  "version": "1.0.0",
+  "description": "A TypeScript transformer for injecting the metadata of a function's parameters to a specific function call.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/Rami-Sabbagh/ts-inject-parameters-metadata.git",
+  "author": "Rami Sabbagh <rami.sab07@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": "^16.3.0"
+  }
+}
