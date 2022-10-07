@@ -30,15 +30,18 @@ function generateTypeTokens(type: ts.Type): TypeTokens {
     if (type.flags & ts.TypeFlags.Undefined) tokens.add('undefined');
     if (type.flags & ts.TypeFlags.Null) tokens.add('null');
     if (type.flags & ts.TypeFlags.Object) {
-        const indexTokens: TypeTokens = [];
+        if (type.getCallSignatures()?.length ?? 0 >= 1) tokens.add('function')
+        else {
+            const indexTokens: TypeTokens = [];
 
-        const numberIndexType = type.getNumberIndexType();
-        if (numberIndexType) indexTokens.push(...generateTypeTokens(numberIndexType));
+            const numberIndexType = type.getNumberIndexType();
+            if (numberIndexType) indexTokens.push(...generateTypeTokens(numberIndexType));
 
-        const stringIndexType = type.getStringIndexType();
-        if (stringIndexType) indexTokens.push(...generateTypeTokens(stringIndexType));
+            const stringIndexType = type.getStringIndexType();
+            if (stringIndexType) indexTokens.push(...generateTypeTokens(stringIndexType));
 
-        tokens.add(indexTokens);
+            tokens.add(indexTokens);
+        }
     }
 
     // Don't follow boolean union types because they are either 'true' or 'false' literals.
