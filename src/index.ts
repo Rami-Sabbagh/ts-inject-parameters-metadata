@@ -65,12 +65,12 @@ export default function factory(program: ts.Program, { targetFunction }: PluginO
         const f = context.factory;
 
         return (sourceFile: ts.SourceFile): ts.SourceFile => {
-            const visitor: ts.Visitor = (node: ts.Node) => {
+            const visitor: ts.Visitor = (node: ts.Node): ts.Node => {
                 if (
                     ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === targetFunction
                 ) {
                     const methodNode = findParentFunction(node);
-                    if (!methodNode) return;
+                    if (!methodNode) return node;
 
                     const methodName = methodNode.name?.text ?? (
                         ts.isPropertyAssignment(methodNode.parent) &&
@@ -83,7 +83,7 @@ export default function factory(program: ts.Program, { targetFunction }: PluginO
                     for (const parameter of methodNode.parameters) {
                         if (!ts.isIdentifier(parameter.name)) {
                             parametersMetadata.push(f.createIdentifier('undefined'));
-                            return;
+                            return node;
                         };
 
                         const name = parameter.name.text;
