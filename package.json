@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "prepublishOnly": "yarn build",
     "build": "tsc"
   },
   "devDependencies": {
