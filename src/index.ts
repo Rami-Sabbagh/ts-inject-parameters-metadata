@@ -4,10 +4,11 @@ interface PluginOptions {
     targetFunction: string,
 }
 
-function findParentFunction(node?: ts.Node): ts.ArrowFunction | ts.FunctionDeclaration | undefined {
+function findParentDeclaration(node?: ts.Node): ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration | undefined {
     while (node !== undefined) {
         if (ts.isArrowFunction(node)) return node;
         else if (ts.isFunctionDeclaration(node)) return node;
+        else if (ts.isMethodDeclaration(node)) return node;
 
         node = node.parent;
     }
@@ -69,10 +70,10 @@ export default function factory(program: ts.Program, { targetFunction }: PluginO
                 if (
                     ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === targetFunction
                 ) {
-                    const methodNode = findParentFunction(node);
+                    const methodNode = findParentDeclaration(node);
                     if (!methodNode) return node;
 
-                    const methodName = methodNode.name?.text ?? (
+                    const methodName = methodNode.name?.getText() ?? (
                         ts.isPropertyAssignment(methodNode.parent) &&
                             ts.isIdentifier(methodNode.parent.name) ?
                             methodNode.parent.name.text : undefined
